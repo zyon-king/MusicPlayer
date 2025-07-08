@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embedded Content via srcdoc</title>
+    <style>
+        /* Define que HTML e BODY ocupem 100% da altura e largura */
+        html, body {
+            margin: 0; /* Remove margens padrão */
+            padding: 0; /* Remove preenchimento padrão */
+            width: 100%; /* Ocupa 100% da largura do viewport */
+            height: 100%; /* Ocupa 100% da altura do viewport */
+            overflow: hidden; /* Evita barras de rolagem indesejadas no corpo */
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+        #loading-message {
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <p id="loading-message">Carregando conteúdo do player...</p>
+    <iframe id="playerIframe" title="Music Player">
+        <p>Seu navegador não suporta iframes ou srcdoc.</p>
+    </iframe>
+
+    <script>
+        const iframe = document.getElementById('playerIframe');
+        const loadingMessage = document.getElementById('loading-message');
+        const contentUrl = 'https://raw.githubusercontent.com/zyon-king/MusicPlayer/main/v0.1_player.html';
+
+        fetch(contentUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(htmlContent => {
+                iframe.setAttribute('srcdoc', htmlContent);
+                loadingMessage.style.display = 'none'; // Hide loading message once loaded
+            })
+            .catch(error => {
+                console.error('Erro ao carregar o conteúdo:', error);
+                loadingMessage.textContent = 'Erro ao carregar o player. Tente novamente mais tarde.';
+                // You might also set iframe content to an error message here if srcdoc fails
+                iframe.setAttribute('srcdoc', `<p style="color: red; text-align: center;">Não foi possível carregar o conteúdo do player.</p>`);
+            });
+    </script>
+
+</body>
+</html>

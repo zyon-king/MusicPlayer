@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sua Playlist Incrível</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+    body {
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Alinha no topo para permitir scroll */
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.container {
+    background-color: rgba(25, 25, 40, 0.9);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    padding: 30px;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    margin-top: 30px; /* Espaço do topo */
+}
+
+h1 {
+    color: #e94560;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    font-weight: 700;
+}
+
+.player-card {
+    background-color: rgba(40, 40, 60, 0.9);
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.cover-art {
+    width: 120px;
+    height: 120px;
+    background-color: #e94560;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 4em;
+    color: #fff;
+    box-shadow: 0 0 15px rgba(233, 69, 96, 0.5);
+}
+
+.song-details h2 {
+    color: #f0f0f0;
+    margin-bottom: 5px;
+    font-size: 1.6em;
+}
+
+.song-details p {
+    color: #b0b0b0;
+    font-size: 0.9em;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 25px;
+    gap: 15px;
+}
+
+.control-btn {
+    background-color: #3e3e5c;
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    width: 50px;
+    height: 50px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.control-btn:hover {
+    background-color: #e94560;
+    transform: translateY(-2px);
+}
+
+.control-btn:active {
+    transform: translateY(1px);
+}
+
+.main-control {
+    width: 70px;
+    height: 70px;
+    font-size: 1.8em;
+    background-color: #e94560;
+    box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+}
+
+.main-control:hover {
+    background-color: #ff6a80;
+}
+
+/* ... volume-control ... */
+
+.volume-control-container {
+    position: relative; /* Para posicionar o slider em relação a este container */
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaço entre o botão e o slider */
+}
+
+#volume-slider {
+    /* Estilos básicos para o slider */
+    width: 0px; /* Inicialmente oculto */
+    height: 8px;
+    -webkit-appearance: none; /* Remove estilos padrão do navegador */
+    appearance: none;
+    background: #3e3e5c;
+    border-radius: 5px;
+    outline: none;
+    opacity: 0; /* Começa invisível */
+    transition: width 0.3s ease-out, opacity 0.3s ease-out; /* Transição suave */
+    cursor: pointer;
+}
+
+/* Estilizando o "thumb" (o círculo que você arrasta) do slider */
+#volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background-color: #e94560;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(233, 69, 96, 0.5);
+    margin-top: -6px; /* Ajusta a posição vertical do thumb */
+}
+
+#volume-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background-color: #e94560;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(233, 69, 96, 0.5);
+}
+
+/* Estilos para a barra de preenchimento (lado esquerdo do thumb) */
+#volume-slider::-webkit-slider-runnable-track {
+    background: #3e3e5c;
+    border-radius: 5px;
+    height: 8px;
+}
+
+#volume-slider::-moz-range-track {
+    background: #3e3e5c;
+    border-radius: 5px;
+    height: 8px;
+}
+
+
+/* Mostra o slider ao passar o mouse sobre o container de volume */
+.volume-control-container:hover #volume-slider {
+    width: 80px; /* Largura expandida ao passar o mouse */
+    opacity: 1; /* Torna visível */
+}
+
+.progress-bar-container {
+    background-color: #3e3e5c;
+    height: 8px;
+    border-radius: 5px;
+    margin-top: 25px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background-color: #e94560;
+    height: 100%;
+    width: 0%;
+    border-radius: 5px;
+    transition: width 0.1s linear;
+}
+
+.time-display {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 0.85em;
+    color: #b0b0b0;
+}
+
+.playlist-container {
+    background-color: rgba(40, 40, 60, 0.9);
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.playlist-container h2 {
+    color: #e94560;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+#playlist {
+    list-style: none;
+    padding: 0;
+    max-height: 300px; /* Limita a altura da playlist para scroll */
+    overflow-y: auto;
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #e94560 #3e3e5c; /* Firefox */
+}
+
+/* Custom scrollbar for Webkit browsers */
+#playlist::-webkit-scrollbar {
+    width: 8px;
+}
+
+#playlist::-webkit-scrollbar-track {
+    background: #3e3e5c;
+    border-radius: 5px;
+}
+
+#playlist::-webkit-scrollbar-thumb {
+    background-color: #e94560;
+    border-radius: 5px;
+    border: 2px solid #3e3e5c;
+}
+
+#playlist li {
+    background-color: rgba(60, 60, 80, 0.7);
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#playlist li:hover {
+    background-color: rgba(70, 70, 90, 0.9);
+    transform: translateX(5px);
+}
+
+#playlist li.active {
+    background-color: #e94560;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(233, 69, 96, 0.5);
+    color: #fff;
+}
+
+#playlist li span.track-number {
+    font-size: 0.8em;
+    color: #b0b0b0;
+    margin-right: 10px;
+}
+
+#playlist li.active span.track-number {
+    color: #fff;
+}
+
+#playlist li span.track-title {
+    flex-grow: 1;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+    .container {
+        padding: 20px;
+        margin-top: 10px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    .player-card {
+        padding: 15px;
+    }
+
+    .cover-art {
+        width: 100px;
+        height: 100px;
+        font-size: 3em;
+    }
+
+    .song-details h2 {
+        font-size: 1.4em;
+    }
+
+    .controls {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .control-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1em;
+    }
+
+    .main-control {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5em;
+    }
+    
+    .volume-control-container:hover #volume-slider {
+        width: 60px; /* Largura menor em telas pequenas */
+    }
+
+    .playlist-container {
+        padding: 15px;
+    }
+
+    #playlist li {
+        padding: 10px 12px;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Minha Playlist</h1>
+        <div class="player-card">
+            <div class="cover-art">
+                <i class="fas fa-music"></i>
+            </div>
+            <div class="song-details">
+                <h2 id="current-song-title">Nenhuma Música Selecionada</h2>
+                <p id="current-song-artist">Artista Desconhecido</p>
+            </div>
+            <div class="controls">
+                <button id="shuffle-btn" class="control-btn"><i class="fas fa-random"></i></button>
+                <button id="prev-btn" class="control-btn"><i class="fas fa-backward"></i></button>
+                <button id="play-pause-btn" class="control-btn main-control"><i class="fas fa-play"></i></button>
+                <button id="next-btn" class="control-btn"><i class="fas fa-forward"></i></button>
+                
+                <div class="volume-control-container"> <button id="mute-unmute-btn" class="control-btn"><i class="fas fa-volume-up"></i></button>
+                	<input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
+                </div>
+                
+            </div>
+            <div class="progress-bar-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+            <div class="time-display">
+                <span id="current-time">0:00</span> / <span id="total-time">0:00</span>
+            </div>
+        </div>
+
+        <div class="playlist-container">
+            <h2>Próximas Músicas</h2>
+            <ul id="playlist">
+                </ul>
+        </div>
+    </div>
+
+    <audio id="audio-player"></audio>
+
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const audioPlayer = document.getElementById('audio-player');
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const shuffleBtn = document.getElementById('shuffle-btn');
+    const muteUnmuteBtn = document.getElementById('mute-unmute-btn');
+    const volumeSlider = document.getElementById('volume-slider'); // Nova variável para o slider de volume
+    const progressBar = document.getElementById('progress-bar');
+    const currentTimeSpan = document.getElementById('current-time');
+    const totalTimeSpan = document.getElementById('total-time');
+    const currentSongTitle = document.getElementById('current-song-title');
+    const currentSongArtist = document.getElementById('current-song-artist');
+    const playlistUl = document.getElementById('playlist');
+
+    let playlist = [];
+    let currentTrackIndex = 0;
+    let isShuffled = false;
+    let originalPlaylistOrder = [];
+    let shuffledPlaylist = [];
+
+    // Função para carregar a playlist
+    async function loadPlaylist() {
+        try {
+            // Para este exemplo, vamos criar uma playlist de demonstração.
+            // Para usar links reais do seu GitHub, você precisaria de um arquivo de texto
+            // com um link por linha e adaptar o código de fetch abaixo.
+            playlist = [
+                { url: 'https://raw.githubusercontent.com/w3teal/awesome-ringtone/main/Google%20Pixel/2021%20-%20Your%20New%20Adventure.mp3', title: 'Your New Adventure', artist: 'Google Pixel' },
+                { url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', title: 'Relaxing Beat', artist: 'SoundHelix' },
+                { url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3', title: 'Upbeat Melody', artist: 'SoundHelix' },
+                { url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3', title: 'Ambient Flow', artist: 'SoundHelix' }
+            ];
+
+            originalPlaylistOrder = [...playlist]; // Salva a ordem original
+            renderPlaylist();
+            loadTrack(currentTrackIndex);
+            // Define o volume inicial do player e do slider
+            audioPlayer.volume = 1; // Volume máximo por padrão
+            volumeSlider.value = audioPlayer.volume;
+        } catch (error) {
+            console.error('Erro ao carregar a playlist:', error);
+            currentSongTitle.textContent = 'Erro ao carregar playlist';
+            currentSongArtist.textContent = '';
+        }
+    }
+
+    // Renderiza a playlist na interface
+    function renderPlaylist() {
+        playlistUl.innerHTML = '';
+        const currentList = isShuffled ? shuffledPlaylist : originalPlaylistOrder;
+        currentList.forEach((song, index) => {
+            const li = document.createElement('li');
+            li.setAttribute('data-index', index);
+            li.innerHTML = `<span class="track-number">${index + 1}.</span> <span class="track-title">${song.title} - ${song.artist}</span>`;
+            if (index === currentTrackIndex) {
+                li.classList.add('active');
+            }
+            li.addEventListener('click', () => {
+                currentTrackIndex = index;
+                loadTrack(currentTrackIndex);
+                playTrack();
+            });
+            playlistUl.appendChild(li);
+        });
+    }
+
+    // Carrega uma música específica pelo índice
+    function loadTrack(index) {
+        if (playlist.length === 0) return;
+
+        const currentList = isShuffled ? shuffledPlaylist : originalPlaylistOrder;
+        const track = currentList[index];
+        audioPlayer.src = track.url;
+        currentSongTitle.textContent = track.title;
+        currentSongArtist.textContent = track.artist;
+        updateActiveItemInPlaylist(index);
+    }
+
+    // Atualiza o item ativo na lista de reprodução
+    function updateActiveItemInPlaylist(index) {
+        document.querySelectorAll('#playlist li').forEach((item, idx) => {
+            // Compara com o 'data-index' para garantir que funciona com playlist embaralhada
+            if (parseInt(item.getAttribute('data-index')) === index) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+        // Rola para o item ativo para que ele seja visível
+        const activeItem = document.querySelector('#playlist li.active');
+        if (activeItem) {
+            activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }
+
+    // Toca a música
+    function playTrack() {
+        audioPlayer.play();
+        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    }
+
+    // Pausa a música
+    function pauseTrack() {
+        audioPlayer.pause();
+        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+    }
+
+    // Alterna play/pause
+    playPauseBtn.addEventListener('click', () => {
+        if (audioPlayer.paused) {
+            playTrack();
+        } else {
+            pauseTrack();
+        }
+    });
+
+    // Próxima música
+    nextBtn.addEventListener('click', () => {
+        const currentList = isShuffled ? shuffledPlaylist : originalPlaylistOrder;
+        currentTrackIndex = (currentTrackIndex + 1) % currentList.length;
+        loadTrack(currentTrackIndex);
+        playTrack();
+    });
+
+    // Música anterior
+    prevBtn.addEventListener('click', () => {
+        const currentList = isShuffled ? shuffledPlaylist : originalPlaylistOrder;
+        currentTrackIndex = (currentTrackIndex - 1 + currentList.length) % currentList.length;
+        loadTrack(currentTrackIndex);
+        playTrack();
+    });
+
+    // Modo aleatório
+    shuffleBtn.addEventListener('click', () => {
+        isShuffled = !isShuffled;
+        shuffleBtn.classList.toggle('active', isShuffled); // Adiciona/remove classe para visual
+        if (isShuffled) {
+            shuffledPlaylist = shuffleArray([...originalPlaylistOrder]);
+            // Encontra o índice da música atual na playlist embaralhada para manter a continuidade
+            const currentTrackUrl = audioPlayer.src;
+            currentTrackIndex = shuffledPlaylist.findIndex(song => song.url === currentTrackUrl);
+            if (currentTrackIndex === -1) { // Se não encontrar (ex: primeira carga), reinicia para o primeiro da embaralhada
+                currentTrackIndex = 0;
+            }
+        } else {
+            // Se desabilitar o shuffle, volta para a ordem original
+            // Encontra o índice da música atual na playlist original
+            const currentTrackUrl = audioPlayer.src;
+            currentTrackIndex = originalPlaylistOrder.findIndex(song => song.url === currentTrackUrl);
+            if (currentTrackIndex === -1) { // Se não encontrar, reinicia para o primeiro da original
+                currentTrackIndex = 0;
+            }
+        }
+        renderPlaylist(); // Re-renderiza a playlist para refletir a ordem
+        loadTrack(currentTrackIndex); // Carrega a música atual na nova ordem (se houver mudança de índice)
+    });
+
+    // Função para embaralhar um array (Fisher-Yates)
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // Mute/Unmute
+    muteUnmuteBtn.addEventListener('click', () => {
+        audioPlayer.muted = !audioPlayer.muted;
+        muteUnmuteBtn.innerHTML = audioPlayer.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+        // Quando mutar/desmutar, atualiza o slider para refletir o estado
+        volumeSlider.value = audioPlayer.muted ? 0 : audioPlayer.volume;
+    });
+
+    // Controlar o volume com o slider
+    volumeSlider.addEventListener('input', () => {
+        audioPlayer.volume = volumeSlider.value;
+        // Se o volume for 0, muda o ícone para mudo
+        if (audioPlayer.volume === 0) {
+            muteUnmuteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            audioPlayer.muted = true; // Garante que o player está marcado como mutado
+        } else {
+            muteUnmuteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            audioPlayer.muted = false; // Garante que o player não está marcado como mutado
+        }
+    });
+
+    // Sincronizar slider com o volume do player se for alterado por outros meios (ex: teclas do sistema)
+    audioPlayer.addEventListener('volumechange', () => {
+        volumeSlider.value = audioPlayer.volume;
+        if (audioPlayer.muted || audioPlayer.volume === 0) {
+            muteUnmuteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+        } else {
+            muteUnmuteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+        }
+    });
+
+
+    // Atualiza barra de progresso e tempo
+    audioPlayer.addEventListener('timeupdate', () => {
+        if (audioPlayer.duration) { // Garante que a duração está disponível
+            const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            currentTimeSpan.textContent = formatTime(audioPlayer.currentTime);
+            totalTimeSpan.textContent = formatTime(audioPlayer.duration);
+        } else {
+            currentTimeSpan.textContent = '0:00';
+            totalTimeSpan.textContent = '0:00';
+            progressBar.style.width = '0%';
+        }
+    });
+
+    // Quando a música termina
+    audioPlayer.addEventListener('ended', () => {
+        nextBtn.click(); // Vai para a próxima música automaticamente
+    });
+
+    // Quando os metadados são carregados (para obter a duração)
+    audioPlayer.addEventListener('loadedmetadata', () => {
+        if (audioPlayer.duration) {
+            totalTimeSpan.textContent = formatTime(audioPlayer.duration);
+        }
+    });
+
+    // Função para formatar o tempo (min:seg)
+    function formatTime(seconds) {
+        const min = Math.floor(seconds / 60);
+        const sec = Math.floor(seconds % 60);
+        return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+    }
+
+    // Inicializa a playlist
+    loadPlaylist();
+});
+    </script>
+</body>
+</html>
